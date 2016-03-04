@@ -13,7 +13,8 @@ class ExistWrapper:
 			raise(Exception)
 
 	def letter(self, req):
-		return self.run("letter=" + str(req))
+		return self.run("letter.xql?letter=" + str(req))
 
-
+	def buildGraph(self):
+		return self.run("buildGraph.xql")
 

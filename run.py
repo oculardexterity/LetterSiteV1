@@ -4,22 +4,23 @@ from flask import Flask, render_template
 
 
 
-
-	
+# Initialise app
 app = Flask(__name__)
+
+
 
 exist = ExistWrapper(Config().existURI)
 
 
 @app.route("/")
 def index():
-	return render_template('index.html')
+	return render_template('test.html')
 
 
 @app.route("/letter/")
 @app.route("/letter/<path:path>/")
 def letter(path=None):
-	return render_template('index.html')
+	return render_template('test.html')
 
 
 @app.route('/ajax/letter/<int:letterId>/')
@@ -32,6 +33,10 @@ def letterAjax(letterId):
 @app.route('/ajax/letter/')
 def letterDefault():
 	return '<em>Sorry no letter</em>'
+
+@app.route('/ajax/defaultGraph')
+def defaultGraph():
+	return exist.buildGraph()
 
 
 if __name__ == '__main__':
