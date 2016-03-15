@@ -1,35 +1,31 @@
 // TO DO --- parse window.location.pathname and trigger appropriate functions...
-/*
+
 var windowManager = ( function( window, undefined ) {
    
 
-  function ajaxRequest(e, path, callback) {
-  	//console.log(localStorage)
-  	//console.log(e.pageY, e.pageX);
-  	$('.letterContainer').css({'height': 0, 'width': 0, 'opacity': 0, 'top': e.pageY, 'left': e.pageX});
+  function ajaxRequest(path, callback) {
+  	console.log('ajax called');
+  	//$('.letterContainer').css({'height': 0, 'width': 0, 'opacity': 0});//, 'top': e.pageY, 'left': e.pageX});
     if (window.location.pathname in localStorage) {
-    	console.log('from localStorage');
-	    letterRenderer(e)(localStorage[window.location.pathname]);
+    
+	    letterRenderer(localStorage[window.location.pathname]);
 		}
 		else {
 			console.log('from ajaxRequest');
 			$.ajax({
 	  		url: "http://localhost:5000/ajax" + window.location.pathname
-			}).done(letterRenderer(e));
+			}).done(letterRenderer);
 		}
   }
 
-  function letterRenderer(e) {
-	  function func(data) {
-	  	//console.log(e);
-	  	expandContainer(e);
-	  	$('.letterContainer').html(data).show();
+  function letterRenderer(data) {
+	  	console.log(data);
+	  	//expandContainer();
+	  	$('.letterContainer').html(data);
 	  	localStorage[window.location.pathname] = data;
-	  }
-	  return func;
 	}
   
-  function expandContainer(e) {
+  function expandContainer() {
   	var h = $(window).height() / 2 - 300;
   	var w = $(window).width() / 2 - 250;
     
@@ -44,13 +40,14 @@ var windowManager = ( function( window, undefined ) {
   };
   
 } )( window );
-*/
 
 
-/*
+
 /*
 	Interface bindings...
+*/
 
+/*
 $('.closeLetter').click(function(e) {
 	e.preventDefault();
 	history.pushState('data', '', 'http://localhost:5000/');
@@ -75,4 +72,5 @@ window.onpopstate = function(e) {
 		$('.closerLetter').hide();
 	}
 };
+
 */

@@ -1,85 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>02. Custom node appearance. Vivagraph SVG tutorial.</title>
-    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
-    <script type="text/javascript" src="/static/js/libraries/vg/vivagraph.js"></script>
-    <script src="/static/js/main.js"></script>
-    <script type="text/javascript">
-        
+					
+// GOES IN MAIN RENDER FUNCTION
 
-
-        function loadGraph (data) {
-            //console.log(data)
-            var // hex rrggbb
-                nodeSize = 12;
-          
-            // Step 1. Create a graph:
-            var graph = Viva.Graph.graph();
-            // Step 2. Add graph content.
-            //  graph.addNode(nodeId, yourCustomData) method lets you add new
-            //  nodes to the graph and associate them with custom data. In this
-            //  case we are associating GitHub user profiles with their Gravatar's images:
-            var data = JSON.parse(data);
-            var nodes = data.nodes;
-            var edges = data.edges;
-            //console.log(data);
-
-
-            nodes.forEach(function(node) {
-                graph.addNode(node.id, {"label": node.label, "color": node.color, "size": node.size});
-            });
-         
-            edges.forEach(function(edge) {
-                //console.log(edge);
-                graph.addLink(edge.source, edge.target, {"edgeId": edge.id});
-            });
-
-
-            var layout = Viva.Graph.Layout.forceDirected(graph, {});
-      /*
-      for (i = 0; i < 150; ++i) {
-        layout.step();
-      }
-      // Now fix all nodes:
-      graph.forEachNode(function(node) {
-        layout.pinNode(node, true);
-      });*/
-
-            // Step 3. Customize node appearance.
-            //  Vivagraph can present graph in multiple ways. svgGraphics() - is
-            //  the way to render graph in SVG format:
-            var graphics = Viva.Graph.View.webglGraphics();
-            // This function let us override default node appearance and create
-            // something better than blue dots:
-
-             var circleNode = buildCircleNodeShader();
+					var circleNode = buildCircleNodeShader();
                 graphics.setNodeProgram(circleNode);
             // second, change the node ui model, which can be understood
             // by the custom shader:
                 graphics.node(function (node) {
-                    //console.log(node);
+                    console.log(node);
                     return new WebglCircle(node.data.size, node.data.color);
                  });
-            
-            // Step 4. Render the graph with our customized graphics object:
-            var renderer = Viva.Graph.View.renderer(graph, {
-                    graphics : graphics,
-                    layout: layout,
-                    container  : document.getElementById('graphContainer'),
-                    renderLinks : true,
-                    prerender  : true
-                });
 
-            var events = Viva.Graph.webglInputEvents(graphics, graph);
-                events.mouseEnter(function(node) {
-                    console.log(node.id)
-                }).click(function (node) {
-                    history.pushState('data', '', '/letter/' + node.id.substring(6));
-                    windowManager.ajaxRequest();
-                });
-            renderer.run();
-        }
+
+//outside
 
          // Lets start from the easiest part - model object for node ui in webgl
         function WebglCircle(size, color) {
@@ -215,27 +147,3 @@
                 replaceProperties : function(replacedNode, newNode) {},
             };
         }
-
-    </script>
-
-    <style type="text/css" media="screen">
-        html, body, svg { width: 100%; height: 100%;}
-    </style>
-</head>
-<body>
-<div id="f">
-</div>
-<div class="closeLetter"></div>
-<!--<div class="letterContainer">asdfas</div>-->
-</body>
-
-<script>
-$(document).ready(function(){
-            $.ajax({
-                url: "http://localhost:5000/ajax/defaultGraph" 
-            }).done(loadGraph);
-                console.log("http://localhost:5000/ajax" + window.location.pathname)
-                windowManager.ajaxRequest();
-        });
-</script>
-</html>
