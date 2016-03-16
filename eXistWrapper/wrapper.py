@@ -16,5 +16,5 @@ class ExistWrapper:
 		return self.run("letter.xql?letter=" + str(req))
 
 	def buildGraph(self):
-		return self.run("buildGraph.xql")
+		return self.run("buildGraphLinkurious.xql")
 

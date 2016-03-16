@@ -14,13 +14,13 @@ exist = ExistWrapper(Config().existURI)
 
 @app.route("/")
 def index():
-	return render_template('test.html')
+	return render_template('testLinkurious.html')
 
 
 @app.route("/letter/")
 @app.route("/letter/<path:path>/")
 def letter(path=None):
-	return render_template('test.html')
+	return render_template('testLinkurious.html')
 
 
 @app.route('/ajax/letter/<int:letterId>/')

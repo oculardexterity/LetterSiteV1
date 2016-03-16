@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>02. Custom node appearance. Vivagraph SVG tutorial.</title>
+    <script src="/static/js/jquery-2.2.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/libraries/linkurious.js/dist/sigma.min.js"></script>
+    <script src="/static/js/libraries/linkurious.js/dist/plugins/sigma.layouts.fruchtermanReingold.min.js"></script>
+     <script src="/static/js/libraries/linkurious.js/dist/plugins/sigma.plugins.animate.min.js"></script>
+   <!-- <script src="/static/js/libraries/linkurious.js/dist/plugins/sigma.layouts.forceLink/supervisor.js"></script>-->
+    <script src="/static/js/main.js"></script>
+    
+
+    <style>
+        #graphContainer {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            
+            bottom: 20px;
+            right: 20px;
+            border: thin solid black;
+            /*background-color: red;*/
+        }
+    </style>
+
+
+        
+</head>
+
+<body>
+<div id="graphContainer">
+
+</div>
+
+</body>
+
+<script>
+$(document).ready(function(){
+            $.ajax({
+                url: "http://localhost:5000/ajax/defaultGraph" 
+            }).done(drawGraph);
+                
+});
+</script>
+
+
+<script type="text/javascript">
+        
+            
+        function drawGraph(data) {    
+            /*
+            var pos = function() {
+                return Math.random()
+            };
+
+            g = {nodes: [{id: 'a'}, {id: 'b'},
+            {id: 'c'}], 
+
+            edges: [{source: 'a', target: 'b', id: "e1"},
+            {source: 'a', target: 'c', id: 'e2'}]}
+            */
+            console.log(data);
+            var g = JSON.parse(data);
+
+            var s = new sigma({
+                
+                graph: g, 
+                renderers: [
+                    {
+                        container: 'graphContainer',
+                        type: 'webgl',
+                        defaultLabelSize: 0,
+                        enableHovering: true,
+                        labelThreshold: 500,
+                        drawLabels: false
+                    }
+                ]
+
+            });
+
+            /*
+            var forceConfig = {
+               
+                startingIterations: 1,
+                iterationsPerRender: 2,
+                randomize: 'globally',
+                randomizeFactor: 1,
+                barnesHutOptimize: true,
+                barnesHutTheta: 0.5,
+              
+                worker: true,
+                
+                linLogMode: true,
+                alignNodeSiblings: true
+
+            };
+            var fa = sigma.layouts.startForceLink(s, forceConfig);
+        
+        }*/
+
+        var frConfig = {
+
+        };
+
+        var listener = sigma.layouts.fruchtermanReingold.configure(s, frConfig);
+
+listener.bind('start stop interpolate', function(event) {
+  console.log(event.type);
+});
+
+        sigma.layouts.fruchtermanReingold.start(s);
+
+    }
+    </script>
+</html>
