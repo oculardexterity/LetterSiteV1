@@ -1,13 +1,15 @@
 // TO DO --- parse window.location.pathname and trigger appropriate functions...
 
+
+
 var windowManager = ( function( window, undefined ) {
    
 
   function ajaxRequest(path, callback) {
-  	console.log('ajax called');
+  	
   	//$('.letterContainer').css({'height': 0, 'width': 0, 'opacity': 0});//, 'top': e.pageY, 'left': e.pageX});
     if (window.location.pathname in localStorage) {
-    
+      console.log('from cache');
 	    letterRenderer(localStorage[window.location.pathname]);
 		}
 		else {
@@ -19,7 +21,7 @@ var windowManager = ( function( window, undefined ) {
   }
 
   function letterRenderer(data) {
-	  	console.log(data);
+	  	
 	  	//expandContainer();
 	  	$('.letterContainer').html(data);
 	  	localStorage[window.location.pathname] = data;
@@ -65,14 +67,24 @@ $(document).ready(function() {
 
 
 /*
-	Interface bindings...
+	On document ready::
 */
+var graph;
 
-/*
+$(document).ready(function(){
+
+	// Initialise some shit:
+	graph = graphManager({
+		container: 'graphContainer',
+		initialGraph: 'defaultGraph'
+	});
+
+
+	/// DOES this query need to be pushed into some graphManager func?
+    $.ajax({
+    	url: "http://localhost:5000/ajax/defaultGraph" 
+    }).done(graph.drawGraph);     
+});
 
 
 
-
-
-
-*/
