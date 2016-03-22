@@ -1,6 +1,6 @@
 // TO DO --- parse window.location.pathname and trigger appropriate functions...
 
-
+var testingOverride = true;
 
 var windowManager = ( function( window, undefined ) {
    
@@ -69,9 +69,14 @@ $(document).ready(function() {
 /*
 	On document ready::
 */
-var graph;
+var graph, router;
 
-$(document).ready(function(){
+
+$(document).ready(function() {
+
+
+	
+
 
 	// Initialise some shit:
 	graph = graphManager({
@@ -79,11 +84,11 @@ $(document).ready(function(){
 		initialGraph: 'defaultGraph'
 	});
 
+	
+	router = routerModule(graph);
 
 	/// DOES this query need to be pushed into some graphManager func?
-    $.ajax({
-    	url: "http://localhost:5000/ajax/defaultGraph" 
-    }).done(graph.drawGraph);     
+      
 });
 
 
