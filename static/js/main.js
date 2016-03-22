@@ -23,13 +23,16 @@ var windowManager = ( function( window, undefined ) {
 	  	//expandContainer();
 	  	$('.letterContainer').html(data);
 	  	localStorage[window.location.pathname] = data;
+	  	expandContainer();
 	}
   
   function expandContainer() {
-  	var h = $(window).height() / 2 - 300;
-  	var w = $(window).width() / 2 - 250;
+  	
+    $('.letterContainer').show();
+    $('.letterContainer').animate({ 'opacity':1}, 200, 'swing');
     
-    $('.letterContainer').animate({'height': '600px', 'width': '500px', 'opacity':1, 'top': h, 'left': w}, 200, 'swing');
+
+
     $('.closeLetter').show();
   }
  
@@ -42,35 +45,34 @@ var windowManager = ( function( window, undefined ) {
 } )( window );
 
 
+$(document).ready(function() {
+	$('.closeLetter').click(function(e){
+		$('.letterContainer').hide();
+		$('.closeLetter').hide();
+	})
+
+	window.onpopstate = function(e) {
+		//alert(window.location.pathname);
+		if (window.location.pathname != "/") {
+		  windowManager.ajaxRequest(e);
+		}
+		else {
+			$('.letterContainer').hide();
+			$('.closeLetter').hide();
+		}
+	};
+})
+
 
 /*
 	Interface bindings...
 */
 
 /*
-$('.closeLetter').click(function(e) {
-	e.preventDefault();
-	history.pushState('data', '', 'http://localhost:5000/');
-	//windowManager.ajaxRequest();
-	$('.letterContainer').hide();
-	$('.closeLetter').hide();
-})
 
-$('.letterLink').click(function(e) {
-	e.preventDefault();
-	history.pushState('data', '', $(this).attr('href'));
-	windowManager.ajaxRequest(e);
-});
 
-window.onpopstate = function(e) {
-	//alert(window.location.pathname);
-	if (window.location.pathname != "/") {
-	  windowManager.ajaxRequest(e);
-	}
-	else {
-		$('.letterContainer').hide();
-		$('.closerLetter').hide();
-	}
-};
+
+
+
 
 */

@@ -2,7 +2,7 @@
 static/styles/style.css.map
 static/js/libraries
 
-
+vivagraph-offline/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 */__pycache__/

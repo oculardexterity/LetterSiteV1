@@ -6,31 +6,115 @@
     <script type="text/javascript" src="/static/js/libraries/linkurious.js/dist/sigma.min.js"></script>
     <script src="/static/js/libraries/linkurious.js/dist/plugins/sigma.layouts.fruchtermanReingold.min.js"></script>
      <script src="/static/js/libraries/linkurious.js/dist/plugins/sigma.plugins.animate.min.js"></script>
+     <script src="/static/js/libraries/linkurious.js/dist/plugins/sigma.plugins.tooltips.min.js"></script>
+
    <!-- <script src="/static/js/libraries/linkurious.js/dist/plugins/sigma.layouts.forceLink/supervisor.js"></script>-->
     <script src="/static/js/main.js"></script>
-    
+    <script src="../plugins/sigma.plugins.tooltips/sigma.plugins.tooltips.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js"></script>
+<div id="container">
+  <style>
 
-    <style>
-        #graphContainer {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            
-            bottom: 20px;
-            right: 20px;
-            border: thin solid black;
-            /*background-color: red;*/
-        }
-    </style>
+    .sigma-tooltip {
+      max-width: 240px;
+      max-height: 280px;
+      background-color: rgb(249, 247, 237);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      border-radius: 6px;
+    }
+
+    .sigma-tooltip-header {
+      font-variant: small-caps;
+      font-size: 120%;
+      color: #437356;
+      border-bottom: 1px solid #aac789;
+      padding: 10px;
+    }
+
+    .sigma-tooltip-body {
+      padding: 10px;
+    }
+
+    .sigma-tooltip-body th {
+      color: #999;
+      text-align: left;
+    }
+
+    .sigma-tooltip-footer {
+      padding: 10px;
+      border-top: 1px solid #aac789;
+    }
+
+    .sigma-tooltip > .arrow {
+      border-width: 10px;
+      position: absolute;
+      display: block;
+      width: 0;
+      height: 0;
+      border-color: transparent;
+      border-style: solid;
+    }
+
+    .sigma-tooltip.top {
+      margin-top: -12px;
+    }
+    .sigma-tooltip.top > .arrow {
+      left: 50%;
+      bottom: -10px;
+      margin-left: -10px;
+      border-top-color: rgb(249, 247, 237);
+      border-bottom-width: 0;
+    }
+
+    .sigma-tooltip.bottom {
+      margin-top: 12px;
+    }
+    .sigma-tooltip.bottom > .arrow {
+      left: 50%;
+      top: -10px;
+      margin-left: -10px;
+      border-bottom-color: rgb(249, 247, 237);
+      border-top-width: 0;
+    }
+
+    .sigma-tooltip.left {
+      margin-left: -12px;
+    }
+    .sigma-tooltip.left > .arrow {
+      top: 50%;
+      right: -10px;
+      margin-top: -10px;
+      border-left-color: rgb(249, 247, 237);
+      border-right-width: 0;
+    }
+
+    .sigma-tooltip.right {
+      margin-left: 12px;
+    }
+    .sigma-tooltip.right > .arrow {
+      top: 50%;
+      left: -10px;
+      margin-top: -10px;
+      border-right-color: rgb(249, 247, 237);
+      border-left-width: 0;
+    }
+
+  </style>
+
+   
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600,600italic,300,300italic,700,700italic' rel='stylesheet' type='text/css'>  
+    <link rel="stylesheet" type="text/css" href="/static/styles/style.css"/>
 
 
         
 </head>
 
 <body>
-<div id="graphContainer">
 
-</div>
+
+<div id="graphContainer"></div>
+<div class="letterContainer"></div>
+<div class="closeLetter"></div>
 
 </body>
 
@@ -59,26 +143,157 @@ $(document).ready(function(){
             edges: [{source: 'a', target: 'b', id: "e1"},
             {source: 'a', target: 'c', id: 'e2'}]}
             */
-            console.log(data);
+            //console.log(data);
             var g = JSON.parse(data);
 
+
+
+var sigmaWebgl = new sigma({
+  graph: g,
+  renderer: {
+    container: document.getElementById('graphContainer'),
+    type: 'webgl',
+
+  },
+  settings: {
+    drawLabels: true
+  }
+});
+sigmaWebgl.refresh();
+
+
+ var letterLabelTemplate = function() {
+    {% raw %}
+    var tmp = '<div class="arrow"></div>' +
+    ' <div class="sigma-tooltip-header">{{data.title}}</div>' +
+    '  <div class="sigma-tooltip-body">' +
+    '    <table>' +
+    '      <tr><th>View:</th> <td><a class="showLetterLink" href="/letter/{{data.letterId}}">{{data.letterId}}</a></td></tr>' +
+
+    '    </table>' +
+    '  </div>'
+    
+ {% endraw %}  
+    return tmp
+};
+var personLabelTemplate = function() {
+    {% raw %}
+    var tmp = '<div class="arrow"></div>' +
+    ' <div class="sigma-tooltip-header">{{data.label}}</div>' +
+    '  <div class="sigma-tooltip-body">' +
+
+    '  </div>' +
+    '  <div class="sigma-tooltip-footer">Number of connections: {{degree}}</div>';
+   {% endraw %}   
+    return tmp
+};
+
+
+var config = {
+  node: {
+    show: 'clickNode',
+ 
+    cssClass: 'sigma-tooltip',
+    position: 'top',
+    //autoadjust: true,
+    //template: letterLabelTemplate,
+ 
+    renderer: function(node, template) {
+      // The function context is s.graph
+      //node.degree = this.degree(node.id);
+      
+
+
+      if (node.data.type === 'letter') {
+      // Returns an HTML string:
+          return Mustache.render(letterLabelTemplate(), node);
+    }
+      else {
+        return Mustache.render(personLabelTemplate(), node)
+      }
+
+      // Returns a DOM Element:
+      //var el = document.createElement('div');
+      //return el.innerHTML = Mustache.render(template, node);
+    }
+  }
+};
+
+
+var tooltipsWebgl = sigma.plugins.tooltips(sigmaWebgl, sigmaWebgl.renderers[0], config);
+
+tooltipsWebgl.bind('shown', function(event) {
+      $(".showLetterLink").click(function(e){
+        e.preventDefault();
+        console.log('sll fired');
+        history.pushState('data', '', $(this).attr('href'));
+        windowManager.ajaxRequest(e);
+        $('.sigma-tooltip').hide();
+    });
+});
+
+tooltipsWebgl.bind('hidden', function(event) {
+  //console.log('tooltip hidden', event);
+});
+
+
+
+
+/*
             var s = new sigma({
                 
                 graph: g, 
                 renderers: [
                     {
                         container: 'graphContainer',
-                        type: 'webgl',
-                        defaultLabelSize: 0,
-                        enableHovering: true,
-                        labelThreshold: 500,
-                        drawLabels: false
+                        type: 'canvas'
+                      
                     }
-                ]
+                ],
+                settings: {
+                    drawLabels: false,
+                    drawEdges: true,
+                    enableHovering: true
+                }
 
             });
 
-            /*
+
+            var config = {
+ 
+
+            }
+
+
+
+
+
+
+       
+          //var tooltip = sigma.plugins.tooltips(s, s.renderers[0], config);
+          s.bind('clickNode', function(event) {
+                var title = event.data.node.label;
+                //alert(title);
+                console.log(event.data.node);
+                history.pushState('data', '', 'http://localhost:5000/' + event.data.node.id);
+                windowManager.ajaxRequest(event.data.node);
+            });
+*/
+
+
+
+
+
+
+/*
+            var tt = sigma.plugins.tooltips(s, s.renderers[0], {
+              node: {
+                show: 'clickNode',
+                
+              }
+            });
+
+
             var forceConfig = {
                
                 startingIterations: 1,
@@ -97,7 +312,7 @@ $(document).ready(function(){
             var fa = sigma.layouts.startForceLink(s, forceConfig);
         
         }*/
-
+/*
         var frConfig = {
 
         };
@@ -108,8 +323,8 @@ listener.bind('start stop interpolate', function(event) {
   console.log(event.type);
 });
 
-        sigma.layouts.fruchtermanReingold.start(s);
-
-    }
+        //sigma.layouts.fruchtermanReingold.start(s);
+*/
+    } 
     </script>
 </html>
