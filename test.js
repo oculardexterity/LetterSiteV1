@@ -29,11 +29,11 @@ var physicsSettings = {
   springCoeff: 0.002,
   gravity: -1,
   theta: 2,
-  dragCoeff: 0.02,
+  dragCoeff: 0.03,
   timeStep: 20
 };
 
-ITERATIONS_COUNT = 100;
+ITERATIONS_COUNT = 1000;
 var layout = require('ngraph.forcelayout')(g, physicsSettings);
 for (var i = 0; i < ITERATIONS_COUNT; ++i) {
   layout.step();
