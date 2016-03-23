@@ -7,11 +7,20 @@ var graphManager = (function(config) {
 			
 			renderer: {
 			    container: container, 
-			    type: 'webgl'
+			    type: 'canvas'
 
 			},
 			settings: {
-			    drawLabels: true
+			    drawLabels: true,
+			    nodesPowRatio: 0.001,
+			    rescaleIgnoreSize: true,
+			    autoResize: false,
+			    zoomMax: 1000,
+			    minNodeSize: 2,
+			    maxNodeSize: 4,
+			    maxEdgeSize: 0.6,
+			    nodeActiveLevel: 5
+
 			}
 	});
 
@@ -52,7 +61,10 @@ var graphManager = (function(config) {
 
 
 	function drawGraphWithData(data) {
+		console.log(data);
+
 		var g = JSON.parse(data);
+
 		sigmaWebgl.graph.read(g);
 		sigmaWebgl.refresh();
 		bindTooltips();
@@ -61,12 +73,13 @@ var graphManager = (function(config) {
 	function bindTooltips() {
 
 		tooltipsWebgl.bind('shown', function(event) {
+			console.log(router);
 		    $(".showLetterLink").click(function(e){
 			    e.preventDefault();
-			    console.log('sll fired');
-			    history.pushState('data', '', $(this).attr('href'));
-			    windowManager.ajaxRequest(e);
-			    //$('.sigma-tooltip').hide();
+			    var url = $(this).attr('href');
+			    
+			    router.getData('letter/' + url, letter.showLetterContent);
+			    router.url.setVar('letter', url);
 		    });
 		});
 

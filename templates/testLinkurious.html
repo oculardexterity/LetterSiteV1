@@ -8,8 +8,12 @@
      <script src="/static/js/libraries/linkurious.js/dist/plugins/sigma.plugins.animate.min.js"></script>
      <script src="/static/js/libraries/linkurious.js/dist/plugins/sigma.plugins.tooltips.min.js"></script>
 
-    <script src="/static/js/graphManager.js"></script>
+
     <script src="/static/js/main.js"></script>
+    <script src="/static/js/graphManager.js"></script>
+    <script src="/static/js/letterManager.js"></script>
+    <script src="/static/js/router.js"></script>
+    
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js"></script>
 <div id="container">
@@ -134,7 +138,7 @@
     ' <div class="sigma-tooltip-header">{{data.title}}</div>' +
     '  <div class="sigma-tooltip-body">' +
     '    <table>' +
-    '      <tr><th>View:</th> <td><a class="showLetterLink" href="/letter/{{data.letterId}}">{{data.letterId}}</a></td></tr>' +
+    '      <tr><th>View:</th> <td><a class="showLetterLink" href="{{data.letterId}}">{{data.letterId}}</a></td></tr>' +
 
     '    </table>' +
     '  </div>'

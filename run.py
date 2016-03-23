@@ -1,6 +1,8 @@
 from config import Config
 from eXistWrapper.wrapper import ExistWrapper
 from flask import Flask, render_template
+from Naked.toolshed.shell import execute_js, muterun_js
+
 
 
 
@@ -37,6 +39,23 @@ def letterDefault():
 @app.route('/ajax/defaultGraph')
 def defaultGraph():
 	return exist.buildGraph()
+
+
+
+@app.route('/ajax/testNode')
+def testNode():
+	print('run')
+	graph = exist.buildGraph()
+	with open('graph.json', 'w') as f:
+		f.write(graph)
+
+	response = muterun_js('test.js')
+	if response.exitcode == 0:
+		return response.stdout
+	else:
+		return 'fail'
+
+
 
 
 if __name__ == '__main__':
