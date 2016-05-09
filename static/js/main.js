@@ -1,6 +1,8 @@
 // TO DO --- parse window.location.pathname and trigger appropriate functions...
 
-var testingOverride = true;
+
+// true reloads data
+var testingOverride = false;
 
 
 

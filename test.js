@@ -33,7 +33,7 @@ var physicsSettings = {
   timeStep: 20
 };
 
-ITERATIONS_COUNT = 1000;
+ITERATIONS_COUNT = 2000;
 var layout = require('ngraph.forcelayout')(g, physicsSettings);
 for (var i = 0; i < ITERATIONS_COUNT; ++i) {
   layout.step();

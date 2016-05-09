@@ -46,7 +46,7 @@ var routerModule = (function() {
     			string += key + '=' + urlVars[key] + '&';
 			});
 			string = string.slice(0, -1);
-			console.log(string);
+			console.log('urlstring: ' + string);
 			history.pushState('data', '', string);
 		}
 
@@ -67,7 +67,10 @@ var routerModule = (function() {
 
 		function removeVar(vari) {
 			if (vari in urlVars) {
+				console.log('removing ' + vari)
+				console.log(urlVars);
 				delete urlVars[vari];
+				console.log(urlVars);
 				setBrowserUrl();
 			}
 		}

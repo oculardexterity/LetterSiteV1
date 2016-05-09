@@ -18,7 +18,7 @@ var graphManager = (function(config) {
 			    zoomMax: 1000,
 			    minNodeSize: 2,
 			    maxNodeSize: 4,
-			    maxEdgeSize: 0.6,
+			    maxEdgeSize: 0.4,
 			    nodeActiveLevel: 5
 
 			}
